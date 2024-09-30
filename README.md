@@ -1,5 +1,7 @@
 # 小集群使用说明
 
+* 2024.09.30 更新SSH失败的checklist
+
 by xyy 2024.09.03
 
 - [小集群使用说明](#小集群使用说明)
@@ -54,7 +56,7 @@ by xyy 2024.09.03
 
    >  请注意NGC的镜像可能没有自带SSH服务端, 你需要安装一下, 可以看后面SSH部分. 且使用NGC镜像注意重启容器后需要手动启动SSH.
    >
-   > NGC的镜像, 一般默认带了一个miniconda或者是miniforge(你可以理解就是你要用的conda)位置一般在`/opt/conda/bin`, 你可以通过命令`source /opt/conda/bin/activate root`激活conda
+   > NGC的镜像, 一般默认带了一个miniconda或者是mambaforge(你可以理解就是你要用的conda)位置一般在`/opt/conda/bin`, 你可以通过命令`source /opt/conda/bin/activate root`激活conda
    >
    > CUDA位置在`/usr/local`下
 
@@ -228,10 +230,38 @@ chmod 600 ~/.ssh/authorized_keys
 请按以下顺序检查:
 
 1. 暂时先不要用vscode来远程登录, 先检查一下你是否在Windows的`cmd`或者是MacOS的`终端`中直接用SSH命令登录. (因为用vscode登录相当于会安装一个名为 VSCode Server 的组件, 可能是安装出现的问题, 有可能是权限的问题, 比如因为你不是root, 但你以为是)
+
 2. 容器是否装了SSH
+
 3. 容器的SSH是否开启了
+
 4. 是否允许root登录, 看一下`/etc/ssh/sshd_config`里的设置
+
 5. (如果你用密码) SSH是否开启密码登录, 看一下`/etc/ssh/sshd_config`里的设置
+
+6. 检查你服务器上的.ssh相关权限:
+
+   ```
+   chmod 700 ~/.ssh
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+7. 检查本地.ssh相关文件权限:
+
+   ```
+   chmod 600 ~/.ssh/id_rsa
+   ```
+
+8. 检查公钥和私钥的指纹是否匹配:
+
+   ```
+   ssh-keygen -lf ~/.ssh/id_rsa.pub
+   ssh-keygen -lf ~/.ssh/id_rsa
+   
+   指纹中的 SHA256 哈希值应一致。这表明你的私钥和公钥是配对的。
+   ```
+
+   
 
 ## 如何科学上网?
 
