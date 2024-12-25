@@ -1,5 +1,7 @@
 # 小集群使用说明
 
+* 2024.12.25 在24号之前创建的容器**需要重启**才能使用`/remote-home/share/extra_0`, 如果你在看到`/remote-home/share/extra_0`里面看到YOU_NEED_TO_REBOOT这个文件夹, 需要重启你的容器, 因为说明你目前看到的extra_0文件夹不是挂载的, 而是本机自带的(因为挂载需要创建一个文件夹先).
+
 * 2024.12.24 news
 
   > 目前已经挂载新的存储, 是吴老师那边的存储机器, 目前还有70T的空间.
@@ -7,7 +9,7 @@
   > ***
   >
   > 如何使用:
-  > * 已有的所有容器都没办法使用下`/attached/extra_0`这个路径(因为docker的部分特性), 你可以到`/remote-home/share/extra_0`中去使用. 这里我只是挂载到了/remote-home下, 方便已有的容器可以使用. no-space的问题不会出现在这个`extra_0`, 因为不是一个东西.
+  > * 已有的所有容器都没办法使用下`/attached/extra_0`这个路径(因为docker的部分特性), 你可以到`/remote-home/share/extra_0`中去使用. 这里我只是挂载到了/remote-home下, 方便已有的容器可以使用. no-space的问题不会出现在这个`extra_0`, 因为不是一个东西. **已有的容器需要重启**
   > * 创建新容器后, 在`/attached/extra_0`下, 创建你姓名的文件, 例如lian, 把你的东西塞进去. 同时也可以访问`/remote-home/share/extra_0`来放东西, `/remote-home/share/extra_0`和`/attached/extra_0`都指向同一个地方
   >
   > ***
@@ -140,6 +142,8 @@ by xyy 2024.09.03
 
 这个是平台的问题(工程师已经建议扩容了, 但是目前看管理的老师并没有计划扩容), 他们的存储集群应该是有一个盘用来存元数据(感觉和文件数量有更大关系), 经常会被写满, 就导致磁盘空间不足.
 所以你用`df`命令看是正常的, 因为数据盘空间是够的. 
+
+可以用`df -i`查看inode使用情况, 可以发现使用太多了. 更多参考: https://help.aliyun.com/zh/ecs/use-cases/resolve-the-issue-of-insufficient-disk-space-on-a-linux-instance
 
 > 即使文件大小不是很大，文件数量仍然会有上限，这是因为文件系统需要维护每个文件的元数据，而元数据本身也需要占用存储空间和资源。以下是几个主要原因：
 >
