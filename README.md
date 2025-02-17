@@ -1,5 +1,13 @@
 # 小集群使用说明
 
+* 2025.2.17 news: 更新了科学上网部分自己部署部分的说明, **更新了新的公益上网服务**.
+
+  ```
+  export http_proxy=http://10.177.60.159:1089 && export https_proxy=http://10.177.60.159:1089 && export no_proxy="localhost, 127.0.0.1"
+  ```
+
+  
+
 * 2024.12.25 news: 新建容器默认时常改为125天; 新增关于no-space即inode问题的更多说明, 还有inode使用情况的查看方式.
 
 * 2024.12.25 在24号之前创建的容器**需要重启**才能使用`/remote-home/share/extra_0`, 如果你在看到`/remote-home/share/extra_0`里面看到YOU_NEED_TO_REBOOT这个文件夹, 需要重启你的容器, 因为说明你目前看到的extra_0文件夹不是挂载的, 而是本机自带的(因为挂载需要创建一个文件夹先).
@@ -405,7 +413,7 @@ unset http_proxy && unset https_proxy && unset no_proxy
 把
 
 ```
-export http_proxy=http://10.177.60.157:1089 && export https_proxy=http://10.177.60.157:1089 && export no_proxy="localhost, 127.0.0.1"
+export http_proxy=http://10.177.60.159:1089 && export https_proxy=http://10.177.60.159:1089 && export no_proxy="localhost, 127.0.0.1"
 ```
 
 写入`~/.bashrc`
@@ -422,23 +430,21 @@ export http_proxy=http://10.177.60.157:1089 && export https_proxy=http://10.177.
 
    * 2024.6.16更新, clash删库了, 用开源的clash meta: https://github.com/MetaCubeX/mihomo
 
-3. 把下载下来的gz文件放到服务器上, 并解压:
+3. 把下载下来的文件放到服务器上有需要的话可能需要解压
 
-   ```
-   gunzip file.gz
-   ```
+4. 第一次运行一下mihomo, 使用`./mihomo_xxx`, 使之生成配置文件夹(位于`~/.config/clash`)
 
-4. 把自己win上想要用订阅改名成config.yaml (端口号也注意对应修改), 放到`~/.config/clash`, 或者是现场下载:
+5. 把自己本地上想要用订阅改名成config.yaml (端口号也注意对应修改), SSH传上去放到`~/.config/clash`, 或者是你直接在服务器上现场下载:
 
    ```
    wget "机场给你的订阅链接" -O config.yaml
    ```
 
-5. ~~同时下载Country.mmdb(https://www.sub-speeder.com/client-download/Country.mmdb), 也放到`~/.config/clash`~~
+6. ~~同时下载Country.mmdb(https://www.sub-speeder.com/client-download/Country.mmdb), 也放到`~/.config/clash`~~
 
    > ~~Country.mmdb为全球IP库，可以实现各个国家的IP信息解析和地理定位~~
 
-6. 暴露接口(可以写入~./bashrc)
+7. 暴露接口(可以写入~./bashrc)
 
    ```
    export http_proxy=http://127.0.0.1:7895
@@ -458,16 +464,14 @@ export http_proxy=http://10.177.60.157:1089 && export https_proxy=http://10.177.
    env|grep -i proxy
    ```
 
-7. 给clash执行权限, 并启动clash
+8. 给clash执行权限, 并启动clash
 
    ```
-   chmod +x clash-linux-amd64-v1.12.0
-   setsid ./clash-linux-amd64-v1.12.0
+   chmod +x mihomo_xxx
+   ./mihomo_xxx #你可以放到tmux里面去
    ```
 
-   > setsid是为了方便启动clash后我能回到当前终端继续操作
-
-8. 测试能不能上网:
+9. 测试能不能上网:
 
    ```
    curl -Lv google.com
@@ -479,7 +483,7 @@ export http_proxy=http://10.177.60.157:1089 && export https_proxy=http://10.177.
    >
    > -v --verbose       Make the operation more talkative
 
-9. 不用时, 关闭服务
+10. 不用时, 关闭服务
 
    ```
    ps -ef | grep clash
