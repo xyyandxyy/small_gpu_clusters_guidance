@@ -1,5 +1,18 @@
 # 小集群使用说明
 
+* 2025.2.18 news:
+
+  目前小集群, 06, 07, 08, 20都挂载上了我们小组自己的存储(truenas)
+  在`/remote-home/share/bigbig_nfs_share`
+  需要重启容器才能看到成功挂载(即在里面看到你名字的文件夹)
+
+  目前额外挂载的存储:
+
+  * `/remote-home/share/extra_0`
+  * `/remote-home/share/bigbig_nfs_share` (推荐)
+
+  推荐使用/`remote-home/share/bigbig_nfs_share`
+
 * 2025.2.17 news: 更新了科学上网部分自己部署部分的说明, **更新了新的公益上网服务**.
 
   ```
