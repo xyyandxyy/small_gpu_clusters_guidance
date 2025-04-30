@@ -1,5 +1,9 @@
 # 小集群使用说明
 
+* 2025.4.30 news:
+
+  更新了`存储结构说明`部分
+  
 * 2025.2.18 news:
 
   目前小集群, 06, 07, 08, 20都挂载上了我们小组自己的存储(truenas)
@@ -141,15 +145,34 @@ by xyy 2024.09.03
 
 ## 存储结构说明
 
-四台机器共享`/remote-home`目录
+四台机器共享`/remote-home`目录. 你可以理解`/remote-home`就是对应一台存储集群(FVL共用)
+
+然后我们(jj下的学生)有自建的一个存储集群, 我们不规范地命名为`bigbig_nfs_share`, 访问入口挂在`/remote-home/share/bigbig_nfs_share`(/remote-home如果坏掉了就没法访问了), 和`/attached/bigbig_nfs_share`(2025年2月之后新建的容器才有)
 
 ```
 /remote-home/
 |-- share # 这里面你的用户名的文件下放的东西其他用户看得到
 `-- xujunhao # 这里面你放的东西其他用户看不到
+/attached/bigbig_nfs_share
 ```
 
 然后每个容器的`/`目录, 存储的东西只有这台机器的这个容器可以访问. (对应了一个16T的机械硬盘)
+
+你的数据一般优先放在`/remote-home`下, 此外还可以放在`bigbig_nfs_share`下你自己名字的文件夹下(没有的话你自己建一个).
+
+***
+
+其他信息:
+
+* `/remote-home`是吴老师和DBCloud他们平台管的, 推测是全闪存储, gpfs双副本模式(cited from他们的工程师). 有问题只能问管理员去问平台运维.
+* `bigbig_nfs_share`是我们自建的便宜服务器, 由老师赞助, 由于成本, 我们是TrueNAS+全机械盘, 做了RAIDZ1 , 最终存储空间有85.66 TiB (截止2025.4.30, 使用了22.04 TiB). 这个机器是我们自己掌管的, 有问题可问管理员.
+
+***
+
+数据容灾建议:
+
+* 提醒一下要勤加备份，懒的话可以写个定时rsync(你可以问一下AI怎么写), 定时把你的备份数据从`/remote-home`备份到`bigbig_nfs_share`. 反之亦然.
+* 不管是`/remote-home`还是`bigbig_nfs_share`都不对集群损坏带来的数据丢失负责.
 
 ## 最常见的No Space Left问题
 
@@ -316,7 +339,7 @@ chmod 600 ~/.ssh/authorized_keys
 
 2. 容器是否装了SSH
 
-3. 容器的SSH是否开启了
+3. 容器的SSH是否开启了(在网页进入web shell后用`/etc/init.d/ssh stop && /etc/init.d/ssh start && service ssh restart`快速启动一下)
 
 4. 是否允许root登录, 看一下`/etc/ssh/sshd_config`里的设置
 
@@ -386,7 +409,7 @@ chmod 600 ~/.ssh/authorized_keys
 1. 在命令行中设置环境变量
 
    ```
-   export http_proxy=http://10.177.60.157:1089 && export https_proxy=http://10.177.60.157:1089 && export no_proxy="localhost, 127.0.0.1"
+   export http_proxy=http://10.177.60.159:1089 && export https_proxy=http://10.177.60.159:1089 && export no_proxy="localhost, 127.0.0.1"
    ```
 
 2. 注意: 我的服务是全局代理.
@@ -432,6 +455,8 @@ export http_proxy=http://10.177.60.159:1089 && export https_proxy=http://10.177.
 写入`~/.bashrc`
 
 ### 方法二
+
+自己配置Clash在Linux上的客户端
 
 1. 先查看服务器的计算机架构:
 
