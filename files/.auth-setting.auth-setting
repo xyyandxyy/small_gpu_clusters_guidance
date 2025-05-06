@@ -1,0 +1,5 @@
+#host为认证服务器ip
+host="10.250.3.66"
+campus_postfix=""
+campus_url=""
+acid="1"
